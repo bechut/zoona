@@ -2,7 +2,8 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
 const test = {
-  master: [1]
+  master: [1],
+  user: [1],
 }
 
 @Controller()
