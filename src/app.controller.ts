@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 const test = {
   master: [1],
   development: [1],
-  setup: [1],
+  setup: [1,2],
 }
 
 @Controller()
