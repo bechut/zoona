@@ -3,7 +3,7 @@ import { AppService } from './app.service';
 
 const test = {
   master: [1],
-  authentication: [1],
+  authentication: [1,2],
 }
 
 @Controller()
