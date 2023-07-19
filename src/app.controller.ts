@@ -5,7 +5,7 @@ const test = {
   master: [1],
   authen: [1],
   setup: [1],
-  user: [1,2],
+  user: [1,2,3],
 }
 
 @Controller()
