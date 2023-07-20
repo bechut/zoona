@@ -9,6 +9,12 @@ jest.mock('uuid', () => ({ v4: () => mockUuid }));
 jest.mock('bcrypt', () => ({ hash: () => mockHash, genSalt: () => 10 }));
 jest.mock('uuid', () => ({ v4: () => mockUuid }));
 
+const uuid = 'uuid';
+const hash = 'hash';
+
+jest.mock('bcrypt', () => ({ hash: () => hash, genSalt: () => 10 }));
+jest.mock('uuid', () => ({ v4: () => uuid }));
+
 describe('AppController', () => {
   let appController: AppController;
 
