@@ -12,6 +12,7 @@ export class UserController {
     await prisma.$transaction([
       prisma.user.create({
         data: {
+          id: user_id,
           email: body.email,
           password: await hash(body.password, await genSalt(10)),
         },

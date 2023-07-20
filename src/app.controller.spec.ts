@@ -1,12 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { prismaMock } from './singleton';
+import { mockHash, mockUuid } from './data.mock';
 
-const uuid = 'uuid';
-const hash = 'hash';
-
-jest.mock('bcrypt', () => ({ hash: () => hash, genSalt: () => 10 }));
-jest.mock('uuid', () => ({ v4: () => uuid }));
+jest.mock('bcrypt', () => ({ hash: () => mockHash, genSalt: () => 10 }));
+jest.mock('uuid', () => ({ v4: () => mockUuid }));
 
 describe('AppController', () => {
   let appController: AppController;
@@ -37,8 +35,8 @@ describe('AppController', () => {
       const query = { test: '' };
 
       expect(await appController.packages(query)).toEqual({
-        uuid,
-        bcrypt_password: hash,
+        uuid: mockUuid,
+        bcrypt_password: mockHash,
         query,
       });
     });
