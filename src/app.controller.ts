@@ -1,5 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import prisma from './client';
+import { v4 } from 'uuid';
+import { hash, genSalt } from 'bcrypt';
+import { TestValidator } from './app.validator';
 @Controller()
 export class AppController {
   @Get()
@@ -9,6 +12,18 @@ export class AppController {
     return {
       findMany,
       findUniqueOrThrow,
+    };
+  }
+
+  @Get('packages')
+  async packages(@Query() query: TestValidator) {
+    const uuid = v4();
+    const bcrypt_password = await hash(uuid, await genSalt(10));
+
+    return {
+      uuid,
+      bcrypt_password,
+      query,
     };
   }
 }
