@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { prismaMock } from './singleton';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -8,15 +8,23 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
     }).compile();
 
     appController = app.get<AppController>(AppController);
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('prismaUsage', async () => {
+      const findUniqueOrThrow = { id: '1' };
+      const findMany = [{ id: '1' }];
+
+      prismaMock.test.findMany.mockResolvedValue(findMany);
+      prismaMock.test.findUniqueOrThrow.mockResolvedValue(findUniqueOrThrow);
+
+      expect(await appController.prismaUsage()).toEqual({
+        findUniqueOrThrow,
+        findMany,
+      });
     });
   });
 });
