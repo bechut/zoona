@@ -17,7 +17,6 @@ export class AccessTokenGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const Public = this.reflector.get<string[]>('Public', context.getHandler());
-    console.log('Public', Public);
     if (Public) {
       return true;
     }
