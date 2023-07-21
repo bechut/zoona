@@ -6,6 +6,9 @@ import { mockHash, mockUuid } from './data.mock';
 jest.mock('bcrypt', () => ({ hash: () => mockHash, genSalt: () => 10 }));
 jest.mock('uuid', () => ({ v4: () => mockUuid }));
 
+jest.mock('bcrypt', () => ({ hash: () => mockHash, genSalt: () => 10 }));
+jest.mock('uuid', () => ({ v4: () => mockUuid }));
+
 describe('AppController', () => {
   let appController: AppController;
 
@@ -34,6 +37,8 @@ describe('AppController', () => {
     it('packages', async () => {
       const query = { test: '' };
 
+      expect(appController.public()).toBe('public');
+      expect(appController.private()).toBe('private');
       expect(await appController.packages(query)).toEqual({
         uuid: mockUuid,
         bcrypt_password: mockHash,

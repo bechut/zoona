@@ -1,3 +1,4 @@
+import { Public } from './decorators/public.decorator';
 import { Controller, Get, Query } from '@nestjs/common';
 import prisma from './client';
 import { v4 } from 'uuid';
@@ -25,5 +26,16 @@ export class AppController {
       bcrypt_password,
       query,
     };
+  }
+
+  @Get('public')
+  @Public()
+  public() {
+    return 'public';
+  }
+
+  @Get('private')
+  private() {
+    return 'private';
   }
 }

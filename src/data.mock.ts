@@ -1,5 +1,6 @@
 export const mockUuid = 'uuid';
 export const mockHash = 'mockHash';
+export const mockAccessToken = 'access_token';
 
 export const mockProfile = {
   id: '',
