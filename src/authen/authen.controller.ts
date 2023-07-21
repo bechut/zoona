@@ -11,12 +11,14 @@ import { compare } from 'bcrypt';
 import { v4 } from 'uuid';
 import * as moment from 'moment';
 import { JwtService } from '../packages/jwt/jwt.service';
+import { Public } from '../decorators/public.decorator';
 
 @Controller('auth')
 export class AuthenController {
   constructor(private readonly jwtService: JwtService) {}
 
   @Post('login')
+  @Public()
   async Login(@Body() body: LoginDto) {
     const user = await prisma.user
       .findUniqueOrThrow({

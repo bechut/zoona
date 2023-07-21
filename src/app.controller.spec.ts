@@ -37,6 +37,8 @@ describe('AppController', () => {
     it('packages', async () => {
       const query = { test: '' };
 
+      expect(appController.public()).toBe('public');
+      expect(appController.private()).toBe('private');
       expect(await appController.packages(query)).toEqual({
         uuid: mockUuid,
         bcrypt_password: mockHash,
