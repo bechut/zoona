@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "add-package": "cd src/packages && nest g mo && nest g s",
     "prisma:dev": "prisma db push && prisma generate && prisma format",
-    "prisma:revert": "prisma db push --schema=prisma/schema-bak.prisma && prisma generate",
+    "prisma:revert": "prisma db push --schema=prisma/schema.bak.prisma && prisma generate",
     "prisma:migrate": "prisma migrate dev && node scripts/migrate.js && prisma generate && prisma format",
     "prisma:deploy": "prisma migrate deploy && prisma generate"
   },
