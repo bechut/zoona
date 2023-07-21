@@ -10,9 +10,12 @@ import prisma from '../client';
 import { compare } from 'bcrypt';
 import { v4 } from 'uuid';
 import * as moment from 'moment';
+import { JwtService } from '../packages/jwt/jwt.service';
 
 @Controller('auth')
 export class AuthenController {
+  constructor(private readonly jwtService: JwtService) {}
+
   @Post('login')
   async Login(@Body() body: LoginDto) {
     const user = await prisma.user
@@ -33,13 +36,12 @@ export class AuthenController {
     await prisma.otp.create({
       data: {
         value: otp,
-        expiredAt: moment().add(1, 'day'),
+        expiredAt: moment().add(1, 'day').toDate(),
         user_id: user.id,
       },
     });
     // pending jwt, moment
-
-    const access_token = 'access_token';
+    const access_token = this.jwtService.get().sign({ token: otp });
 
     return { access_token };
   }
