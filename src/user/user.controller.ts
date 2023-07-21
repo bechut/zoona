@@ -1,9 +1,17 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Param,
+  Post,
+  Get,
+} from '@nestjs/common';
 import prisma from '../client';
 import { v4 } from 'uuid';
 import { CreateUserDto } from './user.dto';
 import { hash, genSalt } from 'bcrypt';
 import { Public } from '../decorators/public.decorator';
+import { UserSelect } from './user.select';
 
 @Controller('user')
 export class UserController {
@@ -33,5 +41,18 @@ export class UserController {
       });
 
     return 'User successfully created';
+  }
+
+  @Get(':id')
+  async userDetail(@Param('id') id: string) {
+    const user = await prisma.user
+      .findUniqueOrThrow({
+        where: { id },
+        select: UserSelect,
+      })
+      .catch((e) => {
+        throw new BadRequestException(e.message);
+      });
+    return user;
   }
 }
