@@ -6,6 +6,7 @@ export const UserSelect = {
   updatedAt: true,
   Profile: {
     select: {
+      id: true,
       first_name: true,
       last_name: true,
       gender: true,

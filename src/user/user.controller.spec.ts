@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
-import { mockHash, mockUser, mockUuid } from '../data.mock';
+import { mockHash, mockProfile, mockUser, mockUuid } from '../data.mock';
 import { prismaMock } from '../singleton';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { GENDERS } from '@prisma/client';
 
 jest.mock('bcrypt', () => ({ hash: () => mockHash, genSalt: () => 10 }));
 jest.mock('uuid', () => ({ v4: () => mockUuid }));
@@ -62,5 +63,71 @@ describe('UserController', () => {
     prismaMock.user.findUniqueOrThrow.mockResolvedValue(mockUser);
     const res = await controller.userDetail(mockUser.id);
     expect(res).toEqual(mockUser);
+  });
+
+  it('userUpdate fail: user not found', async () => {
+    prismaMock.user.findUniqueOrThrow.mockRejectedValue('');
+    const payload: UpdateUserDto = {
+      first_name: mockProfile.first_name,
+      last_name: mockProfile.last_name,
+      gender: GENDERS.Female,
+      bio: '',
+    };
+
+    try {
+      await controller.userUpdate(mockUser.id, payload);
+    } catch (e) {
+      expect(e.message).toBe('Bad Request');
+    }
+  });
+
+  it('userUpdate fail: profile save error', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(mockUser);
+    prismaMock.profile.update.mockRejectedValue('');
+    const payload: UpdateUserDto = {
+      first_name: mockProfile.first_name,
+      last_name: mockProfile.last_name,
+      gender: GENDERS.Female,
+      bio: '',
+    };
+
+    try {
+      await controller.userUpdate(mockUser.id, payload);
+    } catch (e) {
+      expect(e.message).toBe('Bad Request');
+    }
+  });
+
+  it('userUpdate fail: user save error', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(mockUser);
+    prismaMock.profile.update.mockResolvedValue(mockProfile);
+    prismaMock.user.update.mockRejectedValue('');
+    const payload: UpdateUserDto = {
+      first_name: mockProfile.first_name,
+      last_name: mockProfile.last_name,
+      gender: GENDERS.Female,
+      bio: '',
+    };
+
+    try {
+      await controller.userUpdate(mockUser.id, payload);
+    } catch (e) {
+      expect(e.message).toBe('Bad Request');
+    }
+  });
+
+  it('userUpdate success', async () => {
+    prismaMock.user.findUniqueOrThrow.mockResolvedValue(mockUser);
+    prismaMock.profile.update.mockResolvedValue(mockProfile);
+    prismaMock.user.update.mockResolvedValue(mockUser);
+    const payload: UpdateUserDto = {
+      first_name: mockProfile.first_name,
+      last_name: mockProfile.last_name,
+      gender: GENDERS.Female,
+      bio: '',
+    };
+
+    const user = await controller.userUpdate(mockUser.id, payload);
+    expect(user).toEqual(mockUser);
   });
 });

@@ -5,10 +5,11 @@ import {
   Param,
   Post,
   Get,
+  Patch,
 } from '@nestjs/common';
 import prisma from '../client';
 import { v4 } from 'uuid';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { hash, genSalt } from 'bcrypt';
 import { Public } from '../decorators/public.decorator';
 import { UserSelect } from './user.select';
@@ -48,6 +49,37 @@ export class UserController {
     const user = await prisma.user
       .findUniqueOrThrow({
         where: { id },
+        select: UserSelect,
+      })
+      .catch((e) => {
+        throw new BadRequestException(e.message);
+      });
+    return user;
+  }
+
+  @Patch(':id')
+  async userUpdate(@Param('id') id: string, @Body() body: UpdateUserDto) {
+    let user = await prisma.user
+      .findUniqueOrThrow({
+        where: { id },
+        select: UserSelect,
+      })
+      .catch((e) => {
+        throw new BadRequestException(e.message);
+      });
+    await prisma.profile
+      .update({
+        where: { id: user.Profile?.id },
+        data: body,
+        // select: UserSelect,
+      })
+      .catch((e) => {
+        throw new BadRequestException(e.message);
+      });
+    user = await prisma.user
+      .update({
+        where: { id },
+        data: { updatedAt: new Date() },
         select: UserSelect,
       })
       .catch((e) => {
