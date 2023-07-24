@@ -23,6 +23,7 @@ model User {
   updatedAt DateTime? @db.Timestamptz
   Profile   Profile?
   Tokens    Otp[]
+  Players   Player[]
 }
 
 enum GENDERS {
@@ -40,6 +41,8 @@ model Profile {
   bio        String?
   user_id    String?  @unique
   User       User?    @relation(fields: [user_id], references: [id])
+  player_id  String?  @unique
+  Player     Player?  @relation(fields: [player_id], references: [id])
 }
 
 model Otp {
@@ -49,4 +52,13 @@ model Otp {
   User      User     @relation(fields: [user_id], references: [id])
   createdAt DateTime @default(now()) @db.Timestamptz
   expiredAt DateTime @default(now()) @db.Timestamptz
+}
+
+model Player {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now()) @db.Timestamptz
+  updatedAt DateTime? @db.Timestamptz
+  Profile   Profile?
+  parent_id String
+  Parent    User      @relation(fields: [parent_id], references: [id])
 }
