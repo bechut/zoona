@@ -39,8 +39,8 @@ model Profile {
   gender     GENDERS?
   age        Int?
   bio        String?
-  user_id    String  @unique
-  User       User    @relation(fields: [user_id], references: [id])
+  user_id    String?  @unique
+  User       User?    @relation(fields: [user_id], references: [id])
   player_id  String?  @unique
   Player     Player?  @relation(fields: [player_id], references: [id])
 }
