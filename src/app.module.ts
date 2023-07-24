@@ -5,9 +5,10 @@ import { AuthenModule } from './authen/authen.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './guards/access-token.guard';
 import { JwtModule } from './packages/jwt/jwt.module';
+import { PlayerModule } from './player/player.module';
 
 @Module({
-  imports: [JwtModule, UserModule, AuthenModule],
+  imports: [JwtModule, UserModule, AuthenModule, PlayerModule],
   controllers: [AppController],
   providers: [
     {
